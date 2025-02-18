@@ -1,1 +1,3 @@
-## npm i react-html5video
+## npm i react-player
+
+## npm i react-modal
