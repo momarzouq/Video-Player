@@ -3,7 +3,7 @@ function App() {
   return (
     <div>
       <h1>Video Player</h1>
-      <VideoPlayer/>
+      <VideoPlayer />
     </div>
   );
 }
