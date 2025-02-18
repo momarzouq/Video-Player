@@ -1,13 +1,13 @@
 import React from "react";
-import ReactPlayer from "react-player";
-import video from './assets/video-test.mp4'
-export default function VideoComponent() {
+import video from "./assets/video.mp4";
+import poster from './assets/1720475380433.jpg';
+
+export default function VideoPlayer() {
+  console.log("Poster Path:", poster); 
+
   return (
-    <ReactPlayer
-      url={video} 
-      controls
-      width="720px"
-      height="420px"
-    />
+    <video width="720" height="420"  controls autoPlay poster={poster} style={{ backgroundColor: "black" }}>
+      <source src={video} type="video/mp4" />
+    </video>
   );
 }
