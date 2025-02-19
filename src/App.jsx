@@ -1,7 +1,7 @@
 import VideoPlayer from "./VideoPlayer";
 function App() {
   return (
-    <div className="text-center space-y-8 pt-10">
+    <div className="text-center space-y-8 pt-10 text-red-500">
       <h1>Video Player</h1>
       <VideoPlayer />
     </div>
