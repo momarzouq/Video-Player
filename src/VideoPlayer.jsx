@@ -42,7 +42,7 @@ export default function VideoPlayerModal() {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         contentLabel="Video Player Modal"
       >
-        <div className="bg-white rounded-lg shadow-lg p-5 w-full max-w-4xl relative">
+        <div className="bg-white rounded-lg shadow-lg p-5 text-center w-full max-w-4xl relative">
           {/* زر الإغلاق */}
           <button
             onClick={() => setIsOpen(false)}
@@ -51,7 +51,7 @@ export default function VideoPlayerModal() {
             <CircleX />
           </button>
 
-          <h2 className="mb-2">Free course</h2>
+          <h2 className="mb-2 font-semibold text-2xl">Free course</h2>
 
           <ReactPlayer
             ref={playerRef}
