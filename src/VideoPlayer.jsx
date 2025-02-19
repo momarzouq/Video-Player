@@ -51,7 +51,7 @@ export default function VideoPlayerModal() {
             <CircleX />
           </button>
 
-          <h2 className="mb-2 font-semibold text-2xl">Free course</h2>
+          <h2 className="mb-2 font-semibold text-2xl ">Free course</h2>
 
           <ReactPlayer
             ref={playerRef}
