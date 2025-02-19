@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.7",
-    "@vidstack/player": "^1.6.5",
+    "@vidstack/player": "^0.13.3",
     "lit": "^3.2.1",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
