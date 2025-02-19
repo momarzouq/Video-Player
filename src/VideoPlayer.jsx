@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import ReactPlayer from "react-player";
 import Modal from "react-modal";
 import video from "./assets/video.mp4";
-import FilePlayer from "react-player/file";
+import { CircleX, SkipBack, SkipForward } from "lucide-react";
 
 Modal.setAppElement("#root");
 
@@ -25,18 +25,11 @@ export default function VideoPlayerModal() {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div className="text-center">
       {/* زر لفتح الفيديو */}
       <button
         onClick={() => setIsOpen(true)}
-        style={{
-          background: "purple",
-          color: "white",
-          padding: "10px 20px",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
+        className="bg-purple-500 text-white py-2 px-4 rounded-lg cursor-pointer"
       >
         Play
       </button>
@@ -45,82 +38,47 @@ export default function VideoPlayerModal() {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
-        style={{
-          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" }, // خلفية شفافة
-          content: {
-            width: "80%",
-            maxWidth: "800px",
-            height: "auto",
-            margin: "auto",
-            borderRadius: "10px",
-            padding: "20px",
-            textAlign: "center",
-            background: "white",
-            boxShadow: "0px 5px 15px rgba(0,0,0,0.2)",
-          },
-        }}
+        className="fixed inset-0 flex items-center justify-center p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        contentLabel="Video Player Modal"
       >
-        {/* زر الإغلاق */}
-        <button
-          onClick={() => setIsOpen(false)}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            background: "yellow",
-            border: "none",
-            fontSize: "18px",
-            cursor: "pointer",
-            padding: "5px 10px",
-            borderRadius: "50%",
-          }}
-        >
-          ✖
-        </button>
+        <div className="bg-white rounded-lg shadow-lg p-5 w-full max-w-4xl relative">
+          {/* زر الإغلاق */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-2 right-2 bg-yellow-400 rounded-full p-2 cursor-pointer"
+          >
+            <CircleX />
+          </button>
 
-        {/* عنوان الفيديو */}
-        <h2 style={{ marginBottom: "10px" }}>Free course</h2>
+          <h2 className="mb-2">Free course</h2>
 
-        {/* مشغل الفيديو */}
-        <ReactPlayer
-          ref={playerRef}
-          url={video}
-          width="100%"
-          height="400px"
-          controls
-          pip={true}
-          playing
-        />
+          <ReactPlayer
+            ref={playerRef}
+            url={video}
+            width="100%"
+            height="400px"
+            controls
+            pip={true}
+            playing
+          />
 
-        <button
-          onClick={handleSkipBackward}
-          style={{
-            background: "red",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            margin: "10px",
-          }}
-        >
-          الرجوع 5 ثواني
-        </button>
+          <div className="mt-4">
+            <button
+              onClick={handleSkipBackward}
+              className="bg-gray-200 text-black py-2 px-4 rounded-lg cursor-pointer mx-2"
+            >
+              <SkipBack />
+            </button>
 
-        <button
-          onClick={handleSkipForward}
-          style={{
-            background: "green",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            margin: "10px",
-          }}
-        >
-          تخطي 5 ثواني
-        </button>
+            <button
+              onClick={handleSkipForward}
+              className="bg-gray-200 text-black py-2 px-4 rounded-lg cursor-pointer mx-2"
+            >
+              <SkipForward />
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
