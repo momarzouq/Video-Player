@@ -1,85 +1,155 @@
-import React, { useState, useRef } from "react";
-import ReactPlayer from "react-player";
-import Modal from "react-modal";
+import { useRef, useState, useEffect } from "react";
 import video from "./assets/video.mp4";
-import { CircleX, SkipBack, SkipForward } from "lucide-react";
+import thumbnile from "./assets/thumbnile.jpg";
+import { FaPlay, FaPause, FaCog, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
-Modal.setAppElement("#root");
+export default function VideoPlayer() {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
-export default function VideoPlayerModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const playerRef = useRef(null);
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.onloadedmetadata = () => {
+        setDuration(videoRef.current.duration);
+      };
 
-  const handleSkipForward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(currentTime + 5, "seconds");
+      videoRef.current.ontimeupdate = () => {
+        setCurrentTime(videoRef.current.currentTime);
+      };
+    }
+  }, []);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+        setShowControls(false);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+        setShowControls(true);
+      }
     }
   };
 
-  const handleSkipBackward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(currentTime - 5, "seconds");
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
+  };
+
+  const changePlaybackRate = (rate) => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
+      setShowSettings(false);
+    }
+  };
+
+  const handleSeek = (event) => {
+    if (videoRef.current) {
+      const newTime = event.target.value;
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   return (
-    <div className="text-center">
-      {/* زر لفتح الفيديو */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-purple-500 text-white py-2 px-4 rounded-lg cursor-pointer"
+    <div className="relative mx-auto w-[720px] h-[480px] bg-black">
+      {/* مشغل الفيديو */}
+      <video
+        ref={videoRef}
+        className="video-js rounded-lg w-full h-full"
+        controls={false}
+        preload="auto"
+        poster={thumbnile}
+        onClick={togglePlay}
+        onMouseMove={() => setShowControls(true)}
       >
-        Play
-      </button>
+        <source src={video} type="video/mp4" />
+      </video>
 
-      {/* النافذة المنبثقة */}
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        className="fixed inset-0 flex items-center justify-center p-4"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        contentLabel="Video Player Modal"
-      >
-        <div className="bg-white rounded-lg shadow-lg p-5 text-center w-full max-w-4xl relative">
-          {/* زر الإغلاق */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-2 right-2 bg-yellow-400 rounded-full p-2 cursor-pointer"
-          >
-            <CircleX />
-          </button>
+      {/* زر التشغيل/الإيقاف */}
+      {showControls && (
+        <button
+          onClick={togglePlay}
+          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+        >
+          {isPlaying ? (
+            <FaPause className="absolute left-4 bottom-6 text-white text-xl cursor-pointer" />
+          ) : (
+            <span className="bg-violet-500 py-2 px-2 text-center">
+              <FaPlay className="text-white text-2xl cursor-pointer" />
+            </span>
+          )}
+        </button>
+      )}
 
-          <h2 className="mb-2 font-semibold text-2xl ">Free course</h2>
+      {/* شريط التقدم (Progress Bar) */}
+      <input
+        type="range"
+        min="0"
+        max={duration}
+        value={currentTime}
+        onChange={handleSeek}
+        className="absolute bottom-16 left-4 w-[95%] h-1 bg-gray-700 rounded-lg cursor-pointer appearance-none"
+      />
 
-          <ReactPlayer
-            ref={playerRef}
-            url={video}
-            width="100%"
-            height="400px"
-            controls
-            pip={true}
-            playing
-          />
+      {/* مدة الفيديو والوقت الحالي */}
+      <div className="absolute bottom-6 left-12 text-white text-sm">
+        {formatTime(currentTime)} / {formatTime(duration)}
+      </div>
 
-          <div className="mt-4">
+      {/* زر الإعدادات */}
+      <div className="absolute bottom-4 right-4">
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+        >
+          <FaCog className="text-white text-xl" />
+        </button>
+
+        {/* قائمة الإعدادات */}
+        {showSettings && (
+          <div className="absolute bottom-12 left-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg w-40">
+            <h4 className="text-sm font-semibold mb-2">Playback Speed</h4>
+            {[0.5, 1, 1.5, 2].map((rate) => (
+              <button
+                key={rate}
+                onClick={() => changePlaybackRate(rate)}
+                className={`block w-full text-left px-3 py-1 rounded hover:bg-gray-700 ${
+                  playbackRate === rate ? "bg-gray-700" : ""
+                }`}
+              >
+                {rate}x
+              </button>
+            ))}
+
+            <h4 className="text-sm font-semibold mt-3 mb-2">Audio</h4>
             <button
-              onClick={handleSkipBackward}
-              className="bg-gray-200 text-black py-2 px-4 rounded-lg cursor-pointer mx-2"
+              onClick={toggleMute}
+              className="flex items-center gap-2 px-3 py-1 rounded w-full hover:bg-gray-700"
             >
-              <SkipBack />
-            </button>
-
-            <button
-              onClick={handleSkipForward}
-              className="bg-gray-200 text-black py-2 px-4 rounded-lg cursor-pointer mx-2"
-            >
-              <SkipForward />
+              {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
+              {isMuted ? "Unmute" : "Mute"}
             </button>
           </div>
-        </div>
-      </Modal>
+        )}
+      </div>
     </div>
   );
 }
