@@ -106,7 +106,16 @@ export default function VideoPlayer() {
         max={duration}
         value={currentTime}
         onChange={handleSeek}
-        className="absolute bottom-16 left-4 w-[95%] h-1 bg-gray-700 rounded-lg cursor-pointer appearance-none"
+        className="absolute bottom-16 left-4 w-[95%] h-1 rounded-lg cursor-pointer appearance-none"
+        style={{
+          background: `linear-gradient(to right, #8B5CF6 ${(
+            (currentTime / duration) *
+            100
+          ).toFixed(2)}%, #374151 ${(
+            (currentTime / duration) *
+            100
+          ).toFixed(2)}%)`,
+        }}
       />
 
       {/* مدة الفيديو والوقت الحالي */}
@@ -118,7 +127,7 @@ export default function VideoPlayer() {
       <div className="absolute bottom-4 right-4">
         <button
           onClick={() => setShowSettings(!showSettings)}
-          className="bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+          className="bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition duration-500 ease-in-out hover:rotate-360"
         >
           <FaCog className="text-white text-xl" />
         </button>
